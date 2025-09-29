@@ -1,0 +1,44 @@
+#extend schema
+#@link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key"])
+#
+#type Query {
+#    rating(id: ID!): Rating
+#    ratings: [Rating!]!
+#}
+#
+#type Rating @key(fields: "id") {
+#    id: ID!
+#    rate: Float!
+#    byUser: User!
+#    ofTitle: Title!
+#}
+#
+## Notice: no Query.user here! That belongs only to users-svc
+#
+#extend type User @key(fields: "id") {
+#    id: ID! @external
+#}
+#extend type Title @key(fields: "id") {
+#    id: ID! @external
+#}
+
+
+type User @key(fields: "id")  @extends {
+    id: ID! @external
+    reviews: [Rating]
+}
+type Title @key(fields: "id") @extends {
+    id: ID! @external
+    rating: [Rating]
+}
+
+
+type Rating @key(fields: "id") {
+    id: ID!
+    rate: Float!
+    user: User
+    title: Title
+}
+
+extend schema
+@link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key", "@shareable", "@provides", "@external","@extends"])

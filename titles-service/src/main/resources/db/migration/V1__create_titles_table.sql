@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS titles (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    "year" INT NOT NULL
+);

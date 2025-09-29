@@ -1,0 +1,14 @@
+federation_version: 2
+subgraphs:
+  users:
+    routing_url: http://host.docker.internal:9001/graphql
+    schema:
+      file: users/schema.graphql
+  titles:
+    routing_url: http://host.docker.internal:9002/graphql
+    schema:
+      file: titles/schema.graphql
+  ratings:
+    routing_url: http://host.docker.internal:9003/graphql
+    schema:
+      file: ratings/schema.graphql

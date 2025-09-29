@@ -1,0 +1,6 @@
+CREATE TABLE ratings (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT,
+    title_id BIGINT,
+    rate DOUBLE PRECISION NOT NULL
+);

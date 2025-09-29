@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  users-db:
+    image: postgres:16
+    environment: [ POSTGRES_USER=users, POSTGRES_PASSWORD=users, POSTGRES_DB=users ]
+    ports: [ "5433:5432" ]
+  titles-db:
+    image: postgres:16
+    environment: [ POSTGRES_USER=titles, POSTGRES_PASSWORD=titles, POSTGRES_DB=titles ]
+    ports: [ "5434:5432" ]
+  ratings-db:
+    image: postgres:16
+    environment: [ POSTGRES_USER=ratings, POSTGRES_PASSWORD=ratings, POSTGRES_DB=ratings ]
+    ports: [ "5435:5432" ]
+
+  api-gateway:
+    image: ghcr.io/apollographql/router:v1.40.0
+    volumes:
+      - ./api-gateway/supergraph.graphql:/etc/router/supergraph.graphql
+      - ./api-gateway/router.yaml:/etc/router/router.yaml
+    command: [ "--supergraph", "/etc/router/supergraph.graphql", "--config", "/etc/router/router.yaml" ]
+    ports:
+      - "4000:4000"
+    depends_on:
+      - users-db
+      - titles-db
+      - ratings-db

@@ -1,0 +1,19 @@
+type User @key(fields: "id")  @extends {
+    id: ID! @external
+    reviews: [Rating]
+}
+type Title @key(fields: "id") @extends {
+    id: ID! @external
+    rating: [Rating]
+}
+
+
+type Rating @key(fields: "id") {
+    id: ID!
+    rate: Float!
+    user: User
+    title: Title
+}
+
+extend schema
+@link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key", "@shareable", "@provides", "@external","@extends"])

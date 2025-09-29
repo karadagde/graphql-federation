@@ -1,0 +1,79 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'com.netflix.dgs.codegen' version '8.1.1'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+def schemaDir = "${projectDir}/src/main/resources/META-INF/graphql/contracts/subgraphs"
+def supergraphFile = "${buildDir}/supergraph.graphql"
+
+
+repositories {
+    mavenCentral()
+}
+
+// 1. Task: run rover to compose the supergraph
+tasks.register('composeSupergraph', Exec) {
+    group = "build"
+    description = "Compose Apollo Federation supergraph schema from subgraphs"
+
+    // Run in the same folder as the config
+    workingDir schemaDir
+
+    // Command to run
+    executable '/opt/homebrew/bin/rover'   // <-- replace with your which rover result
+    args 'supergraph', 'compose',
+            '--config', 'supergraph-config.yaml',
+            '--output', supergraphFile
+}
+
+generateJava {
+    dependsOn 'composeSupergraph'
+    schemaPaths = [supergraphFile]
+    packageName = 'com.example.contracts.codegen'
+    generateClient = false
+}
+
+// 3. Make sure generated sources are compiled
+sourceSets {
+    main {
+         java {
+            srcDir "${buildDir}/generated" // DTOs
+            exclude '**/dgs-codegen-generated-examples/**'
+        }
+    }
+}
+
+
+
+
+
+
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'graphql-contracts'
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+// 5. Auto-publish after build
+tasks.named("build") {
+    finalizedBy("publishToMavenLocal")
+}
+

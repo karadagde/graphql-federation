@@ -1,0 +1,80 @@
+plugins {
+    id 'org.springframework.boot' version '3.3.6'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+//
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // DGS
+    implementation 'com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:9.2.2'
+    implementation 'com.netflix.graphql.dgs:graphql-dgs-client:9.2.2'
+
+    // Database
+    runtimeOnly 'org.postgresql:postgresql:42.7.4'
+
+    // Contracts JAR
+    implementation 'com.example:graphql-contracts:1.0.0'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == "com.netflix.graphql.dgs") {
+            details.useVersion "9.2.2"
+        }
+    }
+}
+
+//tasks.withType(Test) {
+//    useJUnitPlatform()
+//}
+//
+//
+//// --- Unpack SDLs and fragments from contracts JAR ---
+//tasks.register('unpackContracts', Copy) {
+//    into layout.buildDirectory.dir('contracts')
+//
+//    doFirst {
+//        def contractsJar = configurations.runtimeClasspath.find { it.name.startsWith('graphql-contracts') }
+//        if (contractsJar != null) {
+//            from(zipTree(contractsJar)) {
+//                include 'META-INF/graphql/contracts/**'
+//            }
+//        }
+//    }
+//}
+//compileJava.dependsOn unpackContracts
+//
+//// --- DGS codegen (typed client + types) ---
+//dgsCodegen {
+//    packageName = 'com.example.ratings.generated'
+//    generateClient = true
+//    schemaPaths = [
+//            "${layout.buildDirectory.asFile.get()}/contracts/META-INF/graphql/contracts/subgraphs/ratings",
+//            "${layout.buildDirectory.asFile.get()}/contracts/META-INF/graphql/contracts/fragments"
+//    ]
+//    includeQueries = ["${project.projectDir}/src/main/resources/operations"]
+//}
+//generateJava.dependsOn unpackContracts

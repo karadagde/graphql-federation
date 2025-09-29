@@ -1,0 +1,3 @@
+fragment UserCore on User { id name email }
+fragment TitleCore on Title { id name year }
+fragment RatingCore on Rating { id rate }

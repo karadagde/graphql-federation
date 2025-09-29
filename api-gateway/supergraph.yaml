@@ -1,0 +1,27 @@
+federation_version: 2
+#subgraphs:
+#  users:
+#    routing_url: http://localhost:9001/graphql
+#    schema:
+#      subgraph_url: http://localhost:9001/graphql
+#  titles:
+#    routing_url: http://localhost:9002/graphql
+#    schema:
+#      subgraph_url: http://localhost:9002/graphql
+#  ratings:
+#    routing_url: http://localhost:9003/graphql
+#    schema:
+#      subgraph_url: http://localhost:9003/graphql
+subgraphs:
+  users:
+    routing_url: http://users-service:9001/graphql
+    schema:
+      subgraph_url: http://users-service:9001/graphql
+  titles:
+    routing_url: http://titles-service:9002/graphql
+    schema:
+      subgraph_url: http://titles-service:9002/graphql
+  ratings:
+    routing_url: http://ratings-service:9003/graphql
+    schema:
+      subgraph_url: http://ratings-service:9003/graphql

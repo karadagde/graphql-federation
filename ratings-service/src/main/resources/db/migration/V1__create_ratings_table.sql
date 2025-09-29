@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS ratings (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    title_id BIGINT NOT NULL,
+    value DOUBLE PRECISION NOT NULL
+);
