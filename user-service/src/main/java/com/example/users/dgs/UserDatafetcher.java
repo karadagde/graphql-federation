@@ -1,12 +1,10 @@
 package com.example.users.dgs;
 
 import com.example.contracts.codegen.types.User;
+import com.example.contracts.codegen.types.UserInput;
 import com.example.users.persistence.UserEntity;
 import com.example.users.persistence.UserRepository;
-import com.netflix.graphql.dgs.DgsComponent;
-import com.netflix.graphql.dgs.DgsEntityFetcher;
-import com.netflix.graphql.dgs.DgsQuery;
-import com.netflix.graphql.dgs.InputArgument;
+import com.netflix.graphql.dgs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -34,6 +32,22 @@ public class UserDatafetcher {
     @DgsQuery
     public User user(@InputArgument String id) {
         return repo.findById(Long.valueOf(id)).map(this::toGraphQL).orElse(null);
+    }
+
+    @DgsMutation
+    public User createUser(@InputArgument UserInput user){
+
+        UserEntity entity = new UserEntity();
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+
+        UserEntity saved = repo.save(entity);
+
+        return User.newBuilder()
+                .id(String.valueOf(saved.getId()))
+                .email(saved.getEmail())
+                .name(saved.getName())
+                .build();
     }
 
     @DgsQuery

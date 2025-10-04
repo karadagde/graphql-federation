@@ -15,7 +15,7 @@ java {
 
 def schemaDir = "${projectDir}/src/main/resources/META-INF/graphql/contracts/subgraphs"
 def supergraphFile = "${buildDir}/supergraph.graphql"
-
+def federatedSuperGraphFile ="${projectDir}"
 
 repositories {
     mavenCentral()
@@ -34,6 +34,12 @@ tasks.register('composeSupergraph', Exec) {
     args 'supergraph', 'compose',
             '--config', 'supergraph-config.yaml',
             '--output', supergraphFile
+
+//    executable '/opt/homebrew/bin/rover'   // <-- replace with your which rover result
+//    args 'supergraph', 'compose',
+//            '--config', 'supergraph-config.yaml',
+//            '--output', federatedSuperGraphFile
+
 }
 
 generateJava {

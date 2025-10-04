@@ -4,11 +4,21 @@ type Query {
     users: [User!]!
 }
 
+
+type Mutation{
+    createUser(user:UserInput) : User
+}
+
+
 type User @key(fields: "id"){
     id: ID!
     email: String!
     name: String! @shareable
 }
 
+input UserInput {
+    email: String!
+    name: String!
+}
 extend schema
 @link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key","@shareable"])
